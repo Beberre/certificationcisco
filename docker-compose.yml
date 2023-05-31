@@ -1,1 +1,30 @@
-exercice
+version: '3.3'
+services:
+db:
+image: mysql:5.7
+restart: always
+ports:
+  '3307:3306'
+environment:
+MYSQL_DATABASE: 'certificationCisco'
+MYSQL_ROOT_PASSWORD: 'password'
+MYSQL_ROOT_HOST: '%'
+MYSQL_USER: 'admin'
+MYSQL_USER: '%'
+MYSQL_USER_HOST: '%'
+MYSQL_USER_PASSWORD: 'password'
+expose:
+  '3307'volumes:./db_data:/var/lib/mysql
+  phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  container_name: pma
+  links:
+    dbenvironment:
+PMA_HOST: db
+PMA_PORT: 3306
+PMA_ARBITRARY: 1
+restart: always
+ports:
+  8080:80
+volumes:
+db_data:
