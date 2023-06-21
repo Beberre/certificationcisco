@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>area > Cisco Certification - sTableau de bord </title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="Chart.min.js"></script>
+	<script src="utils.js"></script>
+	<script src="analyser.js"></script>
+</head>
+<body>
+	<div class="content">
+		<div class="wrapper" style="max-width: 512px; margin: auto">
+			<canvas id="chart-0"></canvas>
+		</div>
+		<div class="toolbar">
+
+			<button onclick="toggleSmooth(this)">Smooth</button>
+		</div>
+	</div>
+
+	<script>
+		var presets = window.chartColors;
+		var utils = Samples.utils;
+		var inputs = {
+			min: 0,
+			max: 100,
+			count: 11,
+			decimals: 2,
+			continuity: 1
+		};
+
+		var data = {
+			labels: ["chapitre 1","chapitre 2","chapitre 3","chapitre 4","chapitre 5","chapitre 6","chapitre 7","chapitre 8","chapitre 9","chapitre 10","chapitre 11",],
+			datasets: [{
+				backgroundColor: utils.transparentize(presets.red),
+				borderColor: presets.red,
+				data: [87.24,84.07,61.47,74.83,81.70,0,0,0,0,0,0],
+				label: 'Avancement de la classe'
+			}]
+		};
+
+		var options = {
+			maintainAspectRatio: true,
+			spanGaps: false,
+			elements: {
+				line: {
+					tension: 0.000001
+				}
+			},
+			plugins: {
+				filler: {
+					propagate: false
+				},
+				'samples-filler-analyser': {
+					target: 'chart-analyser'
+				}
+			}
+		};
+
+		var chart = new Chart('chart-0', {
+			type: 'radar',
+			data: data,
+			options: options
+		});
+
+
+		// eslint-disable-next-line no-unused-vars
+		function toggleSmooth(btn) {
+			var value = btn.classList.toggle('btn-on');
+			chart.options.elements.line.tension = value ? 0.4 : 0.000001;
+			chart.update();
+		}	
+	</script>
+</body>
+</html>

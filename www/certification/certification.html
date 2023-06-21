@@ -1,0 +1,50 @@
+<?php
+$connexion = new mysqli("localhost","root","","certificationcisco","3308") or die("erreur connexion");
+$query= "SELECT IFNULL(C.1,0),IFNULL(C.2,0),IFNULL(C.3,0),IFNULL(C.4,0),IFNULL(C.5,0),IFNULL(C.6,0),IFNULL(C.7,0),IFNULL(C.8,0),IFNULL(C.9,0),IFNULL(C.10,0),IFNULL(C.11,0) FROM `classement` C WHERE C.prenom = 'Moyenne :'";
+if($result = $connexion->query($query))
+{
+	$row = $result->fetch_row();
+	$data = "";
+	for ($icptcol=0; $icptcol<10;$icptcol++)
+		$data .= $row[$icptcol]  . ",";
+	$data .= $row[$icptcol];
+}
+
+
+$connexion->close();
+$titre = "Cisco Certification";
+
+$htmlstart = "<!DOCTYPE html>";
+$htmlstart .= "<html>";
+
+$head = "<head>";
+$head .= "<meta charset="utf-8" />";
+$head .= "<link rel="stylesheet" href="../styles.css" />";
+$head .= "<title>$titre</title>";
+$head .= "</head>";
+
+$bodystart = "<body>" ;
+        
+$header = "<header>";        
+$header .= "<img class=\"banner\" src=\"../images/banner.jpg\" alt=\"banner\" title=\"bannière du site de certification CISCO CCNA\"/>";
+$header .= "</header>";
+
+$nav = "<nav>";
+$nav .= "<ul class=\"navigation\">" ;
+$nac .="<li><a href=\"../index.html\">Accueil </a></li>";
+$nav .="</ul>";
+$nav .= "</nav>";
+
+$section ="<section>";
+$section .="</section>";
+
+$section ="<footer>";
+$section .="Contact, Crédit";        
+$section .="<footer>";
+
+$bodystart = "</body>" ;
+$htmlend = "</html>" ;
+
+
+
+?>

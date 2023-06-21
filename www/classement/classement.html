@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="../styles.css" />
+		
+		<script src="Chart.min.js"></script>
+		<script src="utils.js"></script>
+		<script src="analyser.js"></script>
+		        
+        <title>Cisco Certification</title>
+    </head>
+
+    <body>
+        <header>
+             <img class="banner" src="../images/banner.jpg" alt="banner" title="bannière du site de certification CISCO CCNA"/>
+        </header>
+          <nav>
+         	<ul class="navigation">
+				<li><a href="../index.html">Accueil </a></li>  
+	        </ul>
+        </nav>
+
+        
+        <section>
+			<div class="content">
+				<div class="wrapper" style="max-width: 512px; margin: auto">
+					<canvas id="chart-0"></canvas>
+				</div>
+				<div class="toolbar">
+
+					<button onclick="toggleSmooth(this)">Smooth</button>
+				</div>
+			</div>
+			<script>
+				var presets = window.chartColors;
+				var utils = Samples.utils;
+				var inputs = {
+					min: 0,
+					max: 100,
+					count: 11,
+					decimals: 2,
+					continuity: 1
+				};
+
+<?php
+	$connexion = mysqli_connect("127.0.0.1", "ROOT", "") or die("Connexion impossible au serveur $host par $login");  
+	echo "connexion réussie de $login au serveur $serveur<P>"; 
+
+	 mysqli_select_db("certificationCisco") or die("Connexion impossible à la base certificationCisco");  echo "connexion réussie à la base $bd pour l'utilisateur";    
+	 /* interrogation classique */  
+	 $req = "SELECT IFNULL(C.1,0),IFNULL(C.2,0),IFNULL(C.3,0),IFNULL(C.4,0),IFNULL(C.5,0),IFNULL(C.6,0),IFNULL(C.7,0),IFNULL(C.8,0),IFNULL(C.9,0),IFNULL(C.10,0),IFNULL(C.11,0) FROM `classement`C WHERE prenom = 'Moyenne :'";  
+	 $resultat = mysqli_query($req);  
+	 $ligne = mysqli_fetch_row($resultat);  
+	 $data = "";
+	for($icpt=0;$icpt<11;$icp++)
+		$data .= $ligne[$icpt] . "," ;
+	$data .= $ligne[$icpt] ;
+	echo $data
+	 mysqli_close($connexion);
+?>
+				var data = {
+					labels: ["chapitre 1","chapitre 2","chapitre 3","chapitre 4","chapitre 5","chapitre 6","chapitre 7","chapitre 8","chapitre 9","chapitre 10","chapitre 11",],
+					datasets: [{
+						backgroundColor: utils.transparentize(presets.red),
+						borderColor: presets.red,
+						data: [ <?php echo $data ?>],
+						label: 'Avancement de la classe'
+					}]
+				};
+
+				var options = {
+					maintainAspectRatio: true,
+					spanGaps: false,
+					elements: {
+						line: {
+							tension: 0.000001
+						}
+					},
+					plugins: {
+						filler: {
+							propagate: false
+						},
+						'samples-filler-analyser': {
+							target: 'chart-analyser'
+						}
+					}
+				};
+
+				var chart = new Chart('chart-0', {
+					type: 'radar',
+					data: data,
+					options: options
+				});
+
+
+				// eslint-disable-next-line no-unused-vars
+				function toggleSmooth(btn) {
+					var value = btn.classList.toggle('btn-on');
+					chart.options.elements.line.tension = value ? 0.4 : 0.000001;
+					chart.update();
+				}	
+			</script>			
+        </section>
+               
+
+        
+        <footer>
+            Contact, Crédit
+        </footer>
+    </body>
+
+</html>
