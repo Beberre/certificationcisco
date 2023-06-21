@@ -1,30 +1,38 @@
 version: '3.3'
 services:
-db:
-image: mysql:5.7
-restart: always
-ports:
-  '3307:3306'
-environment:
-MYSQL_DATABASE: 'certificationCisco'
-MYSQL_ROOT_PASSWORD: 'password'
-MYSQL_ROOT_HOST: '%'
-MYSQL_USER: 'admin'
-MYSQL_USER: '%'
-MYSQL_USER_HOST: '%'
-MYSQL_USER_PASSWORD: 'password'
-expose:
-  '3307'volumes:./db_data:/var/lib/mysql
-  phpmyadmin:
-  image: phpmyadmin/phpmyadmin
-  container_name: pma
-  links:
-    dbenvironment:
-PMA_HOST: db
-PMA_PORT: 3306
-PMA_ARBITRARY: 1
-restart: always
-ports:
-  8080:80
+    www:
+        build: .
+        ports: 
+            - "8001:80"
+        volumes:
+            - ./www/:/var/www/html/
+        links:
+            - db
+        networks:
+            - default
+    db:
+        image: mysql
+        ports: 
+            - "3333:3306"
+        environment:
+            MYSQL_DATABASE: myDb
+            MYSQL_USER: 'user'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_ROOT_PASSWORD: 'password'
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - db:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: 'user'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_ROOT_PASSWORD: 'password'
 volumes:
-db_data:
+    persistent:
